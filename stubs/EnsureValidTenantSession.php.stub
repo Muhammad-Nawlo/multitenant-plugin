@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\InitializeTenancyBySubdomain;
+use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
+
+class EnsureValidTenantSession
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     */
+    public function handle(Request $request, Closure $next)
+    {
+        // Initialize tenancy based on your configuration
+        // You can choose one of these methods:
+        
+        // For domain-based tenancy:
+        // return app(InitializeTenancyByDomain::class)->handle($request, $next);
+        
+        // For subdomain-based tenancy:
+        // return app(InitializeTenancyBySubdomain::class)->handle($request, $next);
+        
+        // For path-based tenancy:
+        // return app(InitializeTenancyByPath::class)->handle($request, $next);
+        
+        // For now, we'll use domain-based tenancy
+        return app(InitializeTenancyByDomain::class)->handle($request, $next);
+    }
+} 

@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\CentralConnection;
+
+class Tenant extends Model
+{
+    use CentralConnection;
+
+    protected $fillable = [
+        'id',
+        'name',
+        'domain',
+        'data',
+    ];
+
+    protected $casts = [
+        'data' => 'array',
+    ];
+
+    public function getTenantKey()
+    {
+        return $this->getKey();
+    }
+
+    public function getTenantKeyName()
+    {
+        return $this->getKeyName();
+    }
+} 

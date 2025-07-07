@@ -1,61 +1,254 @@
-# :package_description
+# Filament Multitenant Plugin
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/fix-php-code-styling.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
+A comprehensive multitenant plugin for Filament that integrates seamlessly with `stancl/tenancy` to make multitenant applications easier to build and manage.
 
-<!--delete-->
----
-This repo can be used to scaffold a Filament plugin. Follow these steps to get started:
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/muhammad-nawlo/multitenant-plugin.svg?style=flat-square)](https://packagist.org/packages/muhammad-nawlo/multitenant-plugin)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/muhammad-nawlo/multitenant-plugin/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/muhammad-nawlo/multitenant-plugin/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/muhammad-nawlo/multitenant-plugin/fix-php-code-styling.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/muhammad-nawlo/multitenant-plugin/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/muhammad-nawlo/multitenant-plugin.svg?style=flat-square)](https://packagist.org/packages/muhammad-nawlo/multitenant-plugin)
 
-1. Press the "Use this template" button at the top of this repo to create a new repo with the contents of this skeleton.
-2. Run "php ./configure.php" to run a script that will replace all placeholders throughout all the files.
-3. Make something great!
----
-<!--/delete-->
+## Features
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+- 🏢 **Tenant Management**: Complete CRUD operations for tenants through Filament
+- 📊 **Tenant Dashboard**: Beautiful dashboard with tenant statistics and quick actions
+- 🔧 **Easy Integration**: Simple traits to make your resources tenant-aware
+- ⚙️ **Flexible Configuration**: Extensive configuration options
+- 🚀 **Quick Setup**: Automated setup command for fast deployment
+- 🎨 **Modern UI**: Beautiful Filament interface for tenant management
 
 ## Installation
 
-You can install the package via composer:
+1. **Install the package via Composer:**
 
 ```bash
-composer require :vendor_slug/:package_slug
+composer require muhammad-nawlo/multitenant-plugin
 ```
 
-You can publish and run the migrations with:
+2. **Publish the configuration:**
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
-php artisan migrate
+php artisan vendor:publish --tag="multitenant-plugin-config"
 ```
 
-You can publish the config file with:
+3. **Run the setup command:**
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-config"
+php artisan multitenant:setup
 ```
 
-Optionally, you can publish the views using
+4. **Add the plugin to your Filament panel:**
 
-```bash
-php artisan vendor:publish --tag=":package_slug-views"
+```php
+use MuhammadNawlo\MultitenantPlugin\MultitenantPluginPlugin;
+
+// In your panel configuration
+$panel->plugins([
+    MultitenantPluginPlugin::make(),
+]);
 ```
 
-This is the contents of the published config file:
+## Quick Start
+
+### Making Resources Tenant-Aware
+
+Use the `TenantAwareResource` trait in your Filament resources:
+
+```php
+<?php
+
+namespace App\Filament\Resources;
+
+use Filament\Resources\Resource;
+use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareResource;
+
+class PostResource extends Resource
+{
+    use TenantAwareResource;
+
+    // Your resource configuration...
+}
+```
+
+### Making Pages Tenant-Aware
+
+Use the `TenantAwarePage` trait in your Filament pages:
+
+```php
+<?php
+
+namespace App\Filament\Pages;
+
+use Filament\Pages\Page;
+use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwarePage;
+
+class Dashboard extends Page
+{
+    use TenantAwarePage;
+
+    // Your page configuration...
+}
+```
+
+### Making Models Tenant-Aware
+
+Add the `BelongsToTenant` trait to your models:
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+
+class Post extends Model
+{
+    use BelongsToTenant;
+
+    // Your model configuration...
+}
+```
+
+## Configuration
+
+The plugin provides extensive configuration options in `config/multitenant-plugin.php`:
 
 ```php
 return [
+    // Tenant model class
+    'tenant_model' => \Stancl\Tenancy\Database\Models\Tenant::class,
+    
+    // Navigation group for tenant resources
+    'navigation_group' => 'Tenant Management',
+    
+    // Enable/disable features
+    'enable_dashboard' => true,
+    'enable_tenant_resource' => true,
+    
+    // Auto-scope resources to current tenant
+    'auto_scope_resources' => true,
+    
+    // Middleware configuration
+    'tenant_middleware' => ['web', 'auth', 'tenant'],
+    'central_middleware' => ['web', 'auth'],
 ];
 ```
 
 ## Usage
 
+### Tenant Management
+
+The plugin provides a complete tenant management interface:
+
+- **List Tenants**: View all tenants with search and filtering
+- **Create Tenant**: Add new tenants with custom data
+- **Edit Tenant**: Modify tenant information
+- **Delete Tenant**: Remove tenants safely
+- **Switch Tenant**: Switch between tenant contexts
+
+### Tenant Dashboard
+
+Access the tenant dashboard to see:
+
+- Current tenant information
+- Tenant statistics (total, active, recent)
+- Quick actions for tenant management
+- Navigation to tenant resources
+
+### API Methods
+
+The traits provide several useful methods:
+
 ```php
-$variable = new VendorName\Skeleton();
-echo $variable->echoPhrase('Hello, VendorName!');
+// Get current tenant
+$tenant = $this->getCurrentTenant();
+
+// Get tenant ID
+$tenantId = $this->getTenantId();
+
+// Check if in tenant context
+$isTenantContext = $this->isTenantContext();
+
+// Scope query to current tenant
+$query = $this->scopeToTenant($query);
+```
+
+## Commands
+
+### Setup Command
+
+```bash
+php artisan multitenant:setup
+```
+
+This command will:
+
+- Publish tenancy configuration
+- Publish and run migrations
+- Create tenant model
+- Update User model to be tenant-aware
+- Create tenant middleware
+
+### Force Setup
+
+```bash
+php artisan multitenant:setup --force
+```
+
+Force setup even if tenancy is already configured.
+
+## Middleware
+
+The plugin includes middleware for tenant initialization:
+
+```php
+// In your routes
+Route::middleware(['web', 'auth', 'tenant'])->group(function () {
+    // Tenant-specific routes
+});
+
+Route::middleware(['web', 'auth'])->group(function () {
+    // Central administration routes
+});
+```
+
+## Advanced Usage
+
+### Custom Tenant Identification
+
+You can customize how tenants are identified by modifying the middleware:
+
+```php
+// In stubs/EnsureValidTenantSession.php.stub
+// Choose your preferred method:
+
+// Domain-based
+return app(InitializeTenancyByDomain::class)->handle($request, $next);
+
+// Subdomain-based
+return app(InitializeTenancyBySubdomain::class)->handle($request, $next);
+
+// Path-based
+return app(InitializeTenancyByPath::class)->handle($request, $next);
+```
+
+### Custom Tenant Data
+
+Store additional tenant data in the `data` column:
+
+```php
+$tenant = Tenant::create([
+    'id' => 'tenant-1',
+    'name' => 'My Tenant',
+    'domain' => 'tenant1.example.com',
+    'data' => [
+        'plan' => 'premium',
+        'settings' => [
+            'theme' => 'dark',
+            'features' => ['feature1', 'feature2'],
+        ],
+    ],
+]);
 ```
 
 ## Testing
@@ -78,7 +271,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [:author_name](https://github.com/:author_username)
+- [Muhammad Nawlo](https://github.com/Muhammad-Nawlo)
 - [All Contributors](../../contributors)
 
 ## License
