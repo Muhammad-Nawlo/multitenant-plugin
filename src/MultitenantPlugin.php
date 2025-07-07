@@ -24,17 +24,18 @@ class MultitenantPlugin
     public function getTenantId()
     {
         $tenant = $this->getCurrentTenant();
+
         return $tenant ? $tenant->getTenantKey() : null;
     }
 
     public function scopeToTenant($query)
     {
         $tenantId = $this->getTenantId();
-        
+
         if ($tenantId && method_exists($query->getModel(), 'scopeTenant')) {
             return $query->tenant($tenantId);
         }
-        
+
         return $query;
     }
 
@@ -46,11 +47,11 @@ class MultitenantPlugin
     public function getTenantData(): array
     {
         $tenant = $this->getCurrentTenant();
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return [];
         }
-        
+
         return [
             'id' => $tenant->getTenantKey(),
             'name' => $tenant->name ?? $tenant->getTenantKey(),

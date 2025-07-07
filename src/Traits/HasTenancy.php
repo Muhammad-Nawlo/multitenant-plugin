@@ -19,17 +19,18 @@ trait HasTenancy
     protected function getTenantId()
     {
         $tenant = $this->getCurrentTenant();
+
         return $tenant ? $tenant->getTenantKey() : null;
     }
 
     protected function scopeToTenant($query)
     {
         $tenantId = $this->getTenantId();
-        
+
         if ($tenantId && method_exists($query->getModel(), 'scopeTenant')) {
             return $query->tenant($tenantId);
         }
-        
+
         return $query;
     }
 
@@ -37,4 +38,4 @@ trait HasTenancy
     {
         return $this->getCurrentTenant() !== null;
     }
-} 
+}

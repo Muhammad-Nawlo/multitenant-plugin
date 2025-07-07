@@ -17,8 +17,9 @@ class SetupTenancyCommand extends Command
         $this->info('Setting up multitenant plugin...');
 
         // Check if tenancy is already configured
-        if (!$this->option('force') && $this->isTenancyConfigured()) {
+        if (! $this->option('force') && $this->isTenancyConfigured()) {
             $this->warn('Tenancy appears to be already configured. Use --force to override.');
+
             return 1;
         }
 
@@ -64,13 +65,13 @@ class SetupTenancyCommand extends Command
     protected function createTenantModel(): void
     {
         $modelPath = app_path('Models/Tenant.php');
-        
-        if (!File::exists($modelPath)) {
+
+        if (! File::exists($modelPath)) {
             $this->info('Creating Tenant model...');
-            
+
             $stub = File::get(__DIR__ . '/../../stubs/Tenant.php.stub');
             File::put($modelPath, $stub);
-            
+
             $this->info('Tenant model created at: ' . $modelPath);
         }
     }
@@ -78,28 +79,28 @@ class SetupTenancyCommand extends Command
     protected function updateUserModel(): void
     {
         $userModelPath = app_path('Models/User.php');
-        
+
         if (File::exists($userModelPath)) {
             $content = File::get($userModelPath);
-            
+
             // Check if already has tenant trait
-            if (!str_contains($content, 'BelongsToTenant')) {
+            if (! str_contains($content, 'BelongsToTenant')) {
                 $this->info('Updating User model to be tenant-aware...');
-                
+
                 // Add the trait import
                 $content = str_replace(
                     'use Illuminate\Foundation\Auth\User as Authenticatable;',
                     "use Illuminate\Foundation\Auth\User as Authenticatable;\nuse Stancl\Tenancy\Database\Concerns\BelongsToTenant;",
                     $content
                 );
-                
+
                 // Add the trait to the class
                 $content = str_replace(
                     'class User extends Authenticatable',
                     "class User extends Authenticatable\n{\n    use BelongsToTenant;",
                     $content
                 );
-                
+
                 File::put($userModelPath, $content);
                 $this->info('User model updated to be tenant-aware.');
             }
@@ -109,14 +110,14 @@ class SetupTenancyCommand extends Command
     protected function createTenantMiddleware(): void
     {
         $middlewarePath = app_path('Http/Middleware/EnsureValidTenantSession.php');
-        
-        if (!File::exists($middlewarePath)) {
+
+        if (! File::exists($middlewarePath)) {
             $this->info('Creating tenant middleware...');
-            
+
             $stub = File::get(__DIR__ . '/../../stubs/EnsureValidTenantSession.php.stub');
             File::put($middlewarePath, $stub);
-            
+
             $this->info('Tenant middleware created at: ' . $middlewarePath);
         }
     }
-} 
+}

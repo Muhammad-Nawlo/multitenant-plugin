@@ -12,7 +12,7 @@ class MultitenantPluginTest extends TestCase
     {
         $tenancyManager = app(TenancyManager::class);
         $plugin = new MultitenantPlugin($tenancyManager);
-        
+
         $this->assertInstanceOf(MultitenantPlugin::class, $plugin);
     }
 
@@ -20,7 +20,7 @@ class MultitenantPluginTest extends TestCase
     {
         $tenancyManager = app(TenancyManager::class);
         $plugin = new MultitenantPlugin($tenancyManager);
-        
+
         $this->assertInstanceOf(TenancyManager::class, $plugin->getTenancyManager());
     }
 
@@ -28,7 +28,7 @@ class MultitenantPluginTest extends TestCase
     {
         $tenancyManager = app(TenancyManager::class);
         $plugin = new MultitenantPlugin($tenancyManager);
-        
+
         // Should be false when no tenant is initialized
         $this->assertFalse($plugin->isTenantContext());
     }
@@ -37,7 +37,7 @@ class MultitenantPluginTest extends TestCase
     {
         $tenancyManager = app(TenancyManager::class);
         $plugin = new MultitenantPlugin($tenancyManager);
-        
+
         // Should return empty array when no tenant is initialized
         $this->assertEquals([], $plugin->getTenantData());
     }
@@ -46,8 +46,8 @@ class MultitenantPluginTest extends TestCase
     {
         $tenancyManager = app(TenancyManager::class);
         $plugin = new MultitenantPlugin($tenancyManager);
-        
+
         // Should return null when no tenant is initialized
         $this->assertNull($plugin->getTenantId());
     }
-} 
+}

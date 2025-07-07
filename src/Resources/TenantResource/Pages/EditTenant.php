@@ -2,9 +2,9 @@
 
 namespace MuhammadNawlo\MultitenantPlugin\Resources\TenantResource\Pages;
 
-use MuhammadNawlo\MultitenantPlugin\Resources\TenantResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use MuhammadNawlo\MultitenantPlugin\Resources\TenantResource;
 
 class EditTenant extends EditRecord
 {
@@ -21,4 +21,4 @@ class EditTenant extends EditRecord
     {
         return $this->getResource()::getUrl('index');
     }
-} 
+}

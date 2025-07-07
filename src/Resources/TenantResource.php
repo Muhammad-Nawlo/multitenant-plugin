@@ -7,7 +7,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareResource;
 use Stancl\Tenancy\Database\Models\Tenant;
 
 class TenantResource extends Resource
@@ -85,9 +84,10 @@ class TenantResource extends Resource
                     ->action(function (Tenant $tenant) {
                         // Switch to tenant context
                         tenancy()->initialize($tenant);
+
                         return redirect()->back();
                     })
-                    ->visible(fn () => !tenancy()->initialized),
+                    ->visible(fn () => ! tenancy()->initialized),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -109,4 +109,4 @@ class TenantResource extends Resource
     {
         return static::getModel()::count();
     }
-} 
+}

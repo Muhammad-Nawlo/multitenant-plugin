@@ -11,7 +11,7 @@ use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareResource;
 
 /**
  * Example resource demonstrating tenant-aware functionality
- * 
+ *
  * This is an example of how to use the TenantAwareResource trait
  * in your own Filament resources.
  */
@@ -94,4 +94,4 @@ class ExampleTenantAwareResource extends Resource
     {
         return static::getModel()::count();
     }
-} 
+}
