@@ -185,18 +185,7 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
             return;
         }
 
-        // Register tenant resource if enabled
-        if (config('multitenant-plugin.enable_tenant_resource', true)) {
-            \Filament\Resources\Resource::register([
-                \MuhammadNawlo\MultitenantPlugin\Resources\TenantResource::class,
-            ]);
-        }
-
-        // Register tenant dashboard if enabled
-        if (config('multitenant-plugin.enable_dashboard', true)) {
-            \Filament\Pages\Page::register([
-                \MuhammadNawlo\MultitenantPlugin\Pages\TenantDashboard::class,
-            ]);
-        }
+        // Filament components are registered through the plugin class
+        // This method is kept for future use if needed
     }
 }

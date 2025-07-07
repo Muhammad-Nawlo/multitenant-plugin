@@ -1,10 +1,17 @@
 {
     "name": "muhammad-nawlo/multitenant-plugin",
-    "description": "This plugin add multitenant functions to filament using stancl/tenancy",
+    "description": "A comprehensive multitenant plugin for Filament that integrates seamlessly with stancl/tenancy and filament-shield for role-based permissions",
     "keywords": [
-        "Muhammad-Nawlo",
         "laravel",
-        "multitenant-plugin"
+        "filament",
+        "multitenant",
+        "tenancy",
+        "tenant",
+        "permissions",
+        "shield",
+        "role-based-access",
+        "admin-panel",
+        "plugin"
     ],
     "homepage": "https://github.com/muhammad-nawlo/multitenant-plugin",
     "support": {
