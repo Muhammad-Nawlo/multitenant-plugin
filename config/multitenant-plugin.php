@@ -161,4 +161,37 @@ return [
         'web',
         'auth',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Shield Integration
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for Filament Shield integration.
+    |
+    */
+    'shield_integration' => [
+        'enabled' => true,
+        'auto_generate_permissions' => true,
+        'tenant_permission_suffix' => true,
+        'default_roles' => [
+            'tenant_admin' => 'Tenant Administrator',
+            'tenant_manager' => 'Tenant Manager',
+            'tenant_user' => 'Tenant User',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Permission Patterns
+    |--------------------------------------------------------------------------
+    |
+    | Patterns for generating tenant-specific permissions.
+    |
+    */
+    'permission_patterns' => [
+        'resource' => '{action}_{resource}_{tenant}',
+        'page' => 'view_{page}_{tenant}',
+        'custom' => '{permission}_{tenant}',
+    ],
 ];

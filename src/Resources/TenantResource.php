@@ -7,11 +7,13 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareResource;
+use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareShieldResource;
 use Stancl\Tenancy\Database\Models\Tenant;
 
 class TenantResource extends Resource
 {
+    use TenantAwareShieldResource;
+
     protected static ?string $model = Tenant::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office';

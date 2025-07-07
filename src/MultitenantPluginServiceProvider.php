@@ -15,6 +15,7 @@ use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use MuhammadNawlo\MultitenantPlugin\Commands\MultitenantPluginCommand;
 use MuhammadNawlo\MultitenantPlugin\Commands\SetupTenancyCommand;
+use MuhammadNawlo\MultitenantPlugin\Commands\GenerateTenantPermissionsCommand;
 use MuhammadNawlo\MultitenantPlugin\Testing\TestsMultitenantPlugin;
 
 class MultitenantPluginServiceProvider extends PackageServiceProvider
@@ -67,6 +68,13 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
         // Register the main plugin class
         $this->app->singleton('multitenant-plugin', function ($app) {
             return new \MuhammadNawlo\MultitenantPlugin\MultitenantPlugin(
+                $app->make(\Stancl\Tenancy\TenancyManager::class)
+            );
+        });
+
+        // Register the tenant permission service
+        $this->app->singleton('tenant-permission-service', function ($app) {
+            return new \MuhammadNawlo\MultitenantPlugin\Services\TenantPermissionService(
                 $app->make(\Stancl\Tenancy\TenancyManager::class)
             );
         });
@@ -129,6 +137,7 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
         return [
             MultitenantPluginCommand::class,
             SetupTenancyCommand::class,
+            GenerateTenantPermissionsCommand::class,
         ];
     }
 

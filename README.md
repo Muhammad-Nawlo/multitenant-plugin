@@ -12,6 +12,7 @@ A comprehensive multitenant plugin for Filament that integrates seamlessly with 
 - 🏢 **Tenant Management**: Complete CRUD operations for tenants through Filament
 - 📊 **Tenant Dashboard**: Beautiful dashboard with tenant statistics and quick actions
 - 🔧 **Easy Integration**: Simple traits to make your resources tenant-aware
+- 🛡️ **Shield Integration**: Role-based permissions with tenant-specific access control
 - ⚙️ **Flexible Configuration**: Extensive configuration options
 - 🚀 **Quick Setup**: Automated setup command for fast deployment
 - 🎨 **Modern UI**: Beautiful Filament interface for tenant management
@@ -69,6 +70,27 @@ class PostResource extends Resource
 }
 ```
 
+### Making Resources Tenant-Aware with Shield Permissions
+
+Use the `TenantAwareShieldResource` trait for resources that need both tenancy and permissions:
+
+```php
+<?php
+
+namespace App\Filament\Resources;
+
+use Filament\Resources\Resource;
+use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareShieldResource;
+
+class PostResource extends Resource
+{
+    use TenantAwareShieldResource;
+
+    // Your resource configuration...
+    // This will automatically check tenant-specific permissions
+}
+```
+
 ### Making Pages Tenant-Aware
 
 Use the `TenantAwarePage` trait in your Filament pages:
@@ -86,6 +108,27 @@ class Dashboard extends Page
     use TenantAwarePage;
 
     // Your page configuration...
+}
+```
+
+### Making Pages Tenant-Aware with Shield Permissions
+
+Use the `TenantAwareShieldPage` trait for pages that need both tenancy and permissions:
+
+```php
+<?php
+
+namespace App\Filament\Pages;
+
+use Filament\Pages\Page;
+use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareShieldPage;
+
+class Dashboard extends Page
+{
+    use TenantAwareShieldPage;
+
+    // Your page configuration...
+    // This will automatically check tenant-specific permissions
 }
 ```
 
@@ -189,6 +232,25 @@ This command will:
 - Update User model to be tenant-aware
 - Create tenant middleware
 
+### Generate Tenant Permissions
+
+```bash
+# Generate permissions for a specific tenant
+php artisan multitenant:generate-permissions tenant-1
+
+# Generate permissions for all tenants
+php artisan multitenant:generate-permissions --all
+
+# Generate permissions and assign to a role
+php artisan multitenant:generate-permissions tenant-1 --role=tenant_admin
+```
+
+This command will:
+
+- Create tenant-specific permissions for all existing permissions
+- Optionally assign permissions to specified roles
+- Support bulk generation for all tenants
+
 ### Force Setup
 
 ```bash
@@ -249,6 +311,45 @@ $tenant = Tenant::create([
         ],
     ],
 ]);
+```
+
+### Tenant-Specific Permissions
+
+The plugin automatically creates tenant-specific permissions. For example:
+
+```php
+// Global permission
+'view_any_post'
+
+// Tenant-specific permission
+'view_any_post_tenant-1'
+'view_any_post_tenant-2'
+```
+
+This allows you to control access per tenant:
+
+```php
+// Check if user can view posts in current tenant
+if (auth()->user()->can('view_any_post_' . $tenant->getTenantKey())) {
+    // User has permission for this specific tenant
+}
+```
+
+### Using the Permission Service
+
+```php
+use MuhammadNawlo\MultitenantPlugin\Services\TenantPermissionService;
+
+$permissionService = app('tenant-permission-service');
+
+// Check permission for current tenant
+if ($permissionService->hasPermission('view_any_post')) {
+    // User has permission
+}
+
+// Get tenant-specific permission name
+$permissionName = $permissionService->getTenantPermission('view_any_post');
+// Returns: 'view_any_post_tenant-1' (if in tenant context)
 ```
 
 ## Testing

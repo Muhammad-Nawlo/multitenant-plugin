@@ -5,12 +5,12 @@ namespace MuhammadNawlo\MultitenantPlugin\Pages;
 use Filament\Pages\Page;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwarePage;
+use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareShieldPage;
 use Stancl\Tenancy\Database\Models\Tenant;
 
 class TenantDashboard extends Page
 {
-    use TenantAwarePage;
+    use TenantAwareShieldPage;
 
     protected static ?string $navigationIcon = 'heroicon-o-home';
 
