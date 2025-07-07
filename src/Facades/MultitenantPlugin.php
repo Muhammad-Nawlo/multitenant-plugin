@@ -12,7 +12,7 @@ use Stancl\Tenancy\TenancyManager;
  * @method static bool isTenantContext()
  * @method static \Illuminate\Database\Eloquent\Builder scopeToTenant(\Illuminate\Database\Eloquent\Builder $query)
  * @method static array getTenantData()
- * 
+ *
  * @see \MuhammadNawlo\MultitenantPlugin\MultitenantPlugin
  */
 class MultitenantPlugin extends Facade

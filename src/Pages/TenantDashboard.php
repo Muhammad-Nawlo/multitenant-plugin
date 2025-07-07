@@ -3,8 +3,8 @@
 namespace MuhammadNawlo\MultitenantPlugin\Pages;
 
 use Filament\Pages\Page;
-use Filament\Widgets\StatsOverviewWidget\Stat;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareShieldPage;
 use Stancl\Tenancy\Database\Models\Tenant;
 
@@ -81,4 +81,4 @@ class TenantListWidget extends BaseWidget
                 ->color('warning'),
         ];
     }
-} 
+}

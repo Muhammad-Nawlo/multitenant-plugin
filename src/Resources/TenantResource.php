@@ -87,9 +87,10 @@ class TenantResource extends Resource
                     ->action(function (Tenant $tenant) {
                         // Switch to tenant context
                         tenancy()->initialize($tenant);
+
                         return redirect()->back();
                     })
-                    ->visible(fn () => !tenancy()->initialized),
+                    ->visible(fn () => ! tenancy()->initialized),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -111,4 +112,4 @@ class TenantResource extends Resource
     {
         return static::getModel()::count();
     }
-} 
+}

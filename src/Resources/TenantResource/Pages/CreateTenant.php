@@ -2,8 +2,8 @@
 
 namespace MuhammadNawlo\MultitenantPlugin\Resources\TenantResource\Pages;
 
-use MuhammadNawlo\MultitenantPlugin\Resources\TenantResource;
 use Filament\Resources\Pages\CreateRecord;
+use MuhammadNawlo\MultitenantPlugin\Resources\TenantResource;
 
 class CreateTenant extends CreateRecord
 {
@@ -13,4 +13,4 @@ class CreateTenant extends CreateRecord
     {
         return $this->getResource()::getUrl('index');
     }
-} 
+}

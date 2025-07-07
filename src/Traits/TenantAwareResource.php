@@ -2,7 +2,6 @@
 
 namespace MuhammadNawlo\MultitenantPlugin\Traits;
 
-use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 
 trait TenantAwareResource
@@ -12,22 +11,22 @@ trait TenantAwareResource
     protected function getTableQuery(): Builder
     {
         $query = parent::getTableQuery();
-        
+
         if ($this->isTenantContext()) {
             $query = $this->scopeToTenant($query);
         }
-        
+
         return $query;
     }
 
     protected function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
-        
+
         if ($this->isTenantContext()) {
             $query = $this->scopeToTenant($query);
         }
-        
+
         return $query;
     }
 
@@ -45,4 +44,4 @@ trait TenantAwareResource
     {
         return 3;
     }
-} 
+}

@@ -10,13 +10,13 @@ use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
-use Spatie\LaravelPackageTools\Commands\InstallCommand;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
 use MuhammadNawlo\MultitenantPlugin\Commands\MultitenantPluginCommand;
 use MuhammadNawlo\MultitenantPlugin\Commands\SetupTenancyCommand;
 use MuhammadNawlo\MultitenantPlugin\Commands\GenerateTenantPermissionsCommand;
 use MuhammadNawlo\MultitenantPlugin\Testing\TestsMultitenantPlugin;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class MultitenantPluginServiceProvider extends PackageServiceProvider
 {
@@ -64,7 +64,7 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
     {
         // Register the plugin with Filament
         $this->app->singleton(MultitenantPluginPlugin::class);
-        
+
         // Register the main plugin class
         $this->app->singleton('multitenant-plugin', function ($app) {
             return new \MuhammadNawlo\MultitenantPlugin\MultitenantPlugin(
@@ -181,7 +181,7 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
     protected function registerFilamentComponents(): void
     {
         // Only register if Filament is installed
-        if (!class_exists(\Filament\FilamentManager::class)) {
+        if (! class_exists(\Filament\FilamentManager::class)) {
             return;
         }
 

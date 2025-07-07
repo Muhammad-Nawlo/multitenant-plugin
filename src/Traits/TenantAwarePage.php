@@ -2,8 +2,6 @@
 
 namespace MuhammadNawlo\MultitenantPlugin\Traits;
 
-use Filament\Pages\Page;
-
 trait TenantAwarePage
 {
     use HasTenancy;
@@ -16,11 +14,11 @@ trait TenantAwarePage
     protected function getTenantData(): array
     {
         $tenant = $this->getCurrentTenant();
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return [];
         }
-        
+
         return [
             'id' => $tenant->getTenantKey(),
             'name' => $tenant->name ?? $tenant->getTenantKey(),
@@ -30,7 +28,7 @@ trait TenantAwarePage
 
     protected function canAccess(): bool
     {
-        if (!parent::canAccess()) {
+        if (! parent::canAccess()) {
             return false;
         }
 
@@ -42,11 +40,11 @@ trait TenantAwarePage
     {
         $tenant = $this->getCurrentTenant();
         $baseTitle = parent::getTitle();
-        
+
         if ($tenant) {
             return $baseTitle . ' - ' . ($tenant->name ?? $tenant->getTenantKey());
         }
-        
+
         return $baseTitle;
     }
-} 
+}
