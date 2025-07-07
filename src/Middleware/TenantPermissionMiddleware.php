@@ -18,29 +18,27 @@ class TenantPermissionMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @param  string  $permission
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next, string $permission)
     {
         $tenant = $this->tenancyManager->tenant;
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             // In central context, check global permission
-            if (!auth()->user()->can($permission)) {
+            if (! auth()->user()->can($permission)) {
                 abort(403, 'Unauthorized action.');
             }
         } else {
             // In tenant context, check tenant-specific permission
             $tenantPermission = $permission . '_' . $tenant->getTenantKey();
-            
-            if (!auth()->user()->can($tenantPermission)) {
+
+            if (! auth()->user()->can($tenantPermission)) {
                 abort(403, 'Unauthorized action for this tenant.');
             }
         }
 
         return $next($request);
     }
-} 
+}

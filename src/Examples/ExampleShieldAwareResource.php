@@ -11,7 +11,7 @@ use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareShieldResource;
 
 /**
  * Example resource demonstrating shield integration with tenant permissions
- * 
+ *
  * This resource shows how to use TenantAwareShieldResource trait
  * to combine tenancy with Filament Shield permissions.
  */
@@ -131,14 +131,15 @@ class ExampleShieldAwareResource extends Resource
      */
     public static function canViewAny(): bool
     {
-        $instance = new static();
-        
+        $instance = new static;
+
         // Check if user has permission to view any records
         if ($instance->isTenantContext()) {
             $tenant = $instance->getCurrentTenant();
+
             return auth()->user()->can('view_any_' . static::getSlug() . '_' . $tenant->getTenantKey());
         }
-        
+
         return auth()->user()->can('view_any_' . static::getSlug());
     }
 
@@ -147,14 +148,15 @@ class ExampleShieldAwareResource extends Resource
      */
     public static function canView($record): bool
     {
-        $instance = new static();
-        
+        $instance = new static;
+
         // Check if user has permission to view this specific record
         if ($instance->isTenantContext()) {
             $tenant = $instance->getCurrentTenant();
+
             return auth()->user()->can('view_' . static::getSlug() . '_' . $tenant->getTenantKey());
         }
-        
+
         return auth()->user()->can('view_' . static::getSlug());
     }
 
@@ -163,14 +165,15 @@ class ExampleShieldAwareResource extends Resource
      */
     public static function canCreate(): bool
     {
-        $instance = new static();
-        
+        $instance = new static;
+
         // Check if user has permission to create records
         if ($instance->isTenantContext()) {
             $tenant = $instance->getCurrentTenant();
+
             return auth()->user()->can('create_' . static::getSlug() . '_' . $tenant->getTenantKey());
         }
-        
+
         return auth()->user()->can('create_' . static::getSlug());
     }
 
@@ -179,14 +182,15 @@ class ExampleShieldAwareResource extends Resource
      */
     public static function canEdit($record): bool
     {
-        $instance = new static();
-        
+        $instance = new static;
+
         // Check if user has permission to edit this specific record
         if ($instance->isTenantContext()) {
             $tenant = $instance->getCurrentTenant();
+
             return auth()->user()->can('update_' . static::getSlug() . '_' . $tenant->getTenantKey());
         }
-        
+
         return auth()->user()->can('update_' . static::getSlug());
     }
 
@@ -195,14 +199,15 @@ class ExampleShieldAwareResource extends Resource
      */
     public static function canDelete($record): bool
     {
-        $instance = new static();
-        
+        $instance = new static;
+
         // Check if user has permission to delete this specific record
         if ($instance->isTenantContext()) {
             $tenant = $instance->getCurrentTenant();
+
             return auth()->user()->can('delete_' . static::getSlug() . '_' . $tenant->getTenantKey());
         }
-        
+
         return auth()->user()->can('delete_' . static::getSlug());
     }
-} 
+}
