@@ -30,12 +30,13 @@ class TenantPermissionService
     public function hasPermission(string $permission): bool
     {
         $tenant = $this->getCurrentTenant();
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return auth()->user()->can($permission);
         }
-        
+
         $tenantPermission = $permission . '_' . $tenant->getTenantKey();
+
         return auth()->user()->can($tenantPermission);
     }
 
@@ -45,11 +46,11 @@ class TenantPermissionService
     public function getTenantPermission(string $permission): string
     {
         $tenant = $this->getCurrentTenant();
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return $permission;
         }
-        
+
         return $permission . '_' . $tenant->getTenantKey();
     }
 
@@ -59,8 +60,8 @@ class TenantPermissionService
     public function createTenantPermissions(string $tenantId, array $permissions = []): void
     {
         $tenant = Tenant::find($tenantId);
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             throw new \InvalidArgumentException("Tenant with ID '{$tenantId}' not found.");
         }
 
@@ -71,8 +72,8 @@ class TenantPermissionService
 
         foreach ($permissions as $permission) {
             $tenantPermissionName = $permission . '_' . $tenantId;
-            
-            if (!Permission::where('name', $tenantPermissionName)->exists()) {
+
+            if (! Permission::where('name', $tenantPermissionName)->exists()) {
                 Permission::create([
                     'name' => $tenantPermissionName,
                     'guard_name' => 'web',
@@ -87,8 +88,8 @@ class TenantPermissionService
     public function assignTenantPermissionsToRole(string $roleName, string $tenantId, array $permissions = []): void
     {
         $role = Role::where('name', $roleName)->first();
-        
-        if (!$role) {
+
+        if (! $role) {
             $role = Role::create([
                 'name' => $roleName,
                 'guard_name' => 'web',
@@ -99,7 +100,7 @@ class TenantPermissionService
         if (empty($permissions)) {
             $tenantPermissions = Permission::where('name', 'like', '%_' . $tenantId)->get();
         } else {
-            $tenantPermissionNames = array_map(fn($p) => $p . '_' . $tenantId, $permissions);
+            $tenantPermissionNames = array_map(fn ($p) => $p . '_' . $tenantId, $permissions);
             $tenantPermissions = Permission::whereIn('name', $tenantPermissionNames)->get();
         }
 
@@ -120,7 +121,7 @@ class TenantPermissionService
     public function getTenantRoles(string $tenantId): \Illuminate\Database\Eloquent\Collection
     {
         $tenantPermissions = $this->getTenantPermissions($tenantId);
-        
+
         return Role::whereHas('permissions', function ($query) use ($tenantPermissions) {
             $query->whereIn('permissions.id', $tenantPermissions->pluck('id'));
         })->get();
@@ -129,9 +130,9 @@ class TenantPermissionService
     /**
      * Create a default role for a tenant
      */
-    public function createTenantRole(string $tenantId, string $roleName = null): Role
+    public function createTenantRole(string $tenantId, ?string $roleName = null): Role
     {
-        if (!$roleName) {
+        if (! $roleName) {
             $roleName = "tenant_{$tenantId}_admin";
         }
 
@@ -149,11 +150,11 @@ class TenantPermissionService
     public function getAvailablePermissions(): array
     {
         $tenant = $this->getCurrentTenant();
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return Permission::all()->pluck('name')->toArray();
         }
-        
+
         return Permission::where('name', 'like', '%_' . $tenant->getTenantKey())
             ->pluck('name')
             ->toArray();
@@ -165,19 +166,19 @@ class TenantPermissionService
     public function hasAnyTenantPermission(): bool
     {
         $tenant = $this->getCurrentTenant();
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return true; // In central context, assume access
         }
-        
+
         $tenantPermissions = Permission::where('name', 'like', '%_' . $tenant->getTenantKey())->get();
-        
+
         foreach ($tenantPermissions as $permission) {
             if (auth()->user()->can($permission->name)) {
                 return true;
             }
         }
-        
+
         return false;
     }
-} 
+}

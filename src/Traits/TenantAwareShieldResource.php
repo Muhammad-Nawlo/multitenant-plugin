@@ -2,34 +2,34 @@
 
 namespace MuhammadNawlo\MultitenantPlugin\Traits;
 
+use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
-use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 
 trait TenantAwareShieldResource
 {
-    use HasTenancy;
     use HasPanelShield;
+    use HasTenancy;
 
     protected function getTableQuery(): Builder
     {
         $query = parent::getTableQuery();
-        
+
         if ($this->isTenantContext()) {
             $query = $this->scopeToTenant($query);
         }
-        
+
         return $query;
     }
 
     protected function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
-        
+
         if ($this->isTenantContext()) {
             $query = $this->scopeToTenant($query);
         }
-        
+
         return $query;
     }
 
@@ -54,12 +54,12 @@ trait TenantAwareShieldResource
     protected function canAccessResource(string $permission): bool
     {
         $tenant = $this->getCurrentTenant();
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             // In central context, check global permissions
             return auth()->user()->can($permission);
         }
-        
+
         // In tenant context, check tenant-specific permissions
         return auth()->user()->can($permission . '_' . $tenant->getTenantKey());
     }
@@ -70,11 +70,11 @@ trait TenantAwareShieldResource
     protected function getTenantPermission(string $permission): string
     {
         $tenant = $this->getCurrentTenant();
-        
-        if (!$tenant) {
+
+        if (! $tenant) {
             return $permission;
         }
-        
+
         return $permission . '_' . $tenant->getTenantKey();
     }
 
@@ -83,13 +83,14 @@ trait TenantAwareShieldResource
      */
     public static function canViewAny(): bool
     {
-        $instance = new static();
-        
+        $instance = new static;
+
         if ($instance->isTenantContext()) {
             $tenant = $instance->getCurrentTenant();
+
             return auth()->user()->can('view_any_' . static::getSlug() . '_' . $tenant->getTenantKey());
         }
-        
+
         return auth()->user()->can('view_any_' . static::getSlug());
     }
 
@@ -98,13 +99,14 @@ trait TenantAwareShieldResource
      */
     public static function canView($record): bool
     {
-        $instance = new static();
-        
+        $instance = new static;
+
         if ($instance->isTenantContext()) {
             $tenant = $instance->getCurrentTenant();
+
             return auth()->user()->can('view_' . static::getSlug() . '_' . $tenant->getTenantKey());
         }
-        
+
         return auth()->user()->can('view_' . static::getSlug());
     }
 
@@ -113,13 +115,14 @@ trait TenantAwareShieldResource
      */
     public static function canCreate(): bool
     {
-        $instance = new static();
-        
+        $instance = new static;
+
         if ($instance->isTenantContext()) {
             $tenant = $instance->getCurrentTenant();
+
             return auth()->user()->can('create_' . static::getSlug() . '_' . $tenant->getTenantKey());
         }
-        
+
         return auth()->user()->can('create_' . static::getSlug());
     }
 
@@ -128,13 +131,14 @@ trait TenantAwareShieldResource
      */
     public static function canEdit($record): bool
     {
-        $instance = new static();
-        
+        $instance = new static;
+
         if ($instance->isTenantContext()) {
             $tenant = $instance->getCurrentTenant();
+
             return auth()->user()->can('update_' . static::getSlug() . '_' . $tenant->getTenantKey());
         }
-        
+
         return auth()->user()->can('update_' . static::getSlug());
     }
 
@@ -143,13 +147,14 @@ trait TenantAwareShieldResource
      */
     public static function canDelete($record): bool
     {
-        $instance = new static();
-        
+        $instance = new static;
+
         if ($instance->isTenantContext()) {
             $tenant = $instance->getCurrentTenant();
+
             return auth()->user()->can('delete_' . static::getSlug() . '_' . $tenant->getTenantKey());
         }
-        
+
         return auth()->user()->can('delete_' . static::getSlug());
     }
-} 
+}
