@@ -22,9 +22,10 @@ class TenantManagementPanel extends Panel
                 if (! $user || ! $user->hasRole($superAdminRole)) {
                     abort(403, 'Unauthorized. Only super admins can access this panel.');
                 }
+
                 return $next($request);
             },
         ]);
         // Optionally, add custom pages or middleware here
     }
-} 
+}
