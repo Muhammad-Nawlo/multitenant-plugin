@@ -18,9 +18,10 @@ class MultitenantPlugin
 
     public function getCurrentTenant()
     {
-        if (!$this->tenancyManager) {
+        if (! $this->tenancyManager) {
             return null;
         }
+
         return $this->tenancyManager->tenant;
     }
 
