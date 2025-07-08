@@ -105,17 +105,19 @@ class SetupTenancyCommand extends Command
             if (! str_contains($content, 'BelongsToTenant')) {
                 $this->info('Updating User model to be tenant-aware...');
 
-                // Add the trait import
-                $content = str_replace(
-                    'use Illuminate\Foundation\Auth\User as Authenticatable;',
-                    "use Illuminate\Foundation\Auth\User as Authenticatable;\nuse Stancl\Tenancy\Database\Concerns\BelongsToTenant;",
-                    $content
-                );
+                // Add the trait import if not present
+                if (!str_contains($content, 'use Stancl\Tenancy\Database\Concerns\BelongsToTenant;')) {
+                    $content = preg_replace(
+                        '/(use Illuminate\\Foundation\\Auth\\User as Authenticatable;)/',
+                        "\1\nuse Stancl\\Tenancy\\Database\\Concerns\\BelongsToTenant;",
+                        $content
+                    );
+                }
 
-                // Add the trait to the class
-                $content = str_replace(
-                    'class User extends Authenticatable',
-                    "class User extends Authenticatable\n{\n    use BelongsToTenant;",
+                // Add the trait usage after the class opening
+                $content = preg_replace(
+                    '/(class\\s+User\\s+extends\\s+Authenticatable\\s*{)/',
+                    "\1\n    use BelongsToTenant;",
                     $content
                 );
 
