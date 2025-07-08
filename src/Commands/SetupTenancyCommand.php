@@ -107,7 +107,7 @@ class SetupTenancyCommand extends Command
                 $this->info('Updating User model to be tenant-aware...');
 
                 // Add the trait import if not present
-                if (!str_contains($content, 'use Stancl\Tenancy\Database\Concerns\BelongsToTenant;')) {
+                if (! str_contains($content, 'use Stancl\Tenancy\Database\Concerns\BelongsToTenant;')) {
                     $content = preg_replace(
                         '/(use Illuminate\\Foundation\\Auth\\User as Authenticatable;)/',
                         "\1\nuse Stancl\\Tenancy\\Database\\Concerns\\BelongsToTenant;",
