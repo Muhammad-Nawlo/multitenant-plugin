@@ -32,15 +32,17 @@ trait TenantAwareShieldPage
 
     public static function canAccess(): bool
     {
-        $instance = new static();
-        if (!parent::canAccess()) {
+        $instance = new static;
+        if (! parent::canAccess()) {
             return false;
         }
         $tenant = $instance->getCurrentTenant();
         if ($tenant) {
             $permission = 'view_' . static::getSlug() . '_' . $tenant->getTenantKey();
+
             return auth()->user()->can($permission);
         }
+
         return auth()->user()->can('view_' . static::getSlug());
     }
 
