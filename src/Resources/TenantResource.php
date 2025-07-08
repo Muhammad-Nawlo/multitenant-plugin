@@ -25,10 +25,10 @@ class TenantResource extends Resource
     public static function getModel(): string
     {
         // Fallback if Tenant model doesn't exist
-        if (!class_exists(Tenant::class)) {
+        if (! class_exists(Tenant::class)) {
             return \Illuminate\Database\Eloquent\Model::class;
         }
-        
+
         return Tenant::class;
     }
 
