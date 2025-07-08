@@ -78,9 +78,10 @@ class SetupTenancyCommand extends Command
                 }
 
                 $stubPath = __DIR__ . '/../../stubs/Tenant.php.stub';
-                
+
                 if (! File::exists($stubPath)) {
                     $this->error('Stub file not found: ' . $stubPath);
+
                     return;
                 }
 
@@ -143,9 +144,10 @@ class SetupTenancyCommand extends Command
                 }
 
                 $stubPath = __DIR__ . '/../../stubs/EnsureValidTenantSession.php.stub';
-                
+
                 if (! File::exists($stubPath)) {
                     $this->error('Stub file not found: ' . $stubPath);
+
                     return;
                 }
 

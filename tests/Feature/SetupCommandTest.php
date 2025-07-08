@@ -2,8 +2,8 @@
 
 namespace MuhammadNawlo\MultitenantPlugin\Tests\Feature;
 
-use MuhammadNawlo\MultitenantPlugin\Tests\TestCase;
 use Illuminate\Support\Facades\File;
+use MuhammadNawlo\MultitenantPlugin\Tests\TestCase;
 
 class SetupCommandTest extends TestCase
 {
@@ -58,4 +58,4 @@ class SetupCommandTest extends TestCase
         $this->assertTrue(File::exists($modelDir));
         $this->assertTrue(File::exists($middlewareDir));
     }
-} 
+}
