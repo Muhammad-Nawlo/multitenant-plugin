@@ -49,4 +49,4 @@ class MultitenantPluginManager implements Plugin
 
         return $plugin;
     }
-} 
+}
