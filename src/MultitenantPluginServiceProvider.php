@@ -2,7 +2,6 @@
 
 namespace MuhammadNawlo\MultitenantPlugin;
 
-
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
 use MuhammadNawlo\MultitenantPlugin\Commands\GenerateTenantPermissionsCommand;
@@ -93,8 +92,6 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
         Testable::mixin(new TestsMultitenantPlugin);
     }
 
-
-
     /**
      * @return array<class-string>
      */
@@ -106,8 +103,6 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
             GenerateTenantPermissionsCommand::class,
         ];
     }
-
-
 
     /**
      * @return array<string>
