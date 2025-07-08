@@ -20,7 +20,7 @@ return [
     | The model class that represents a tenant in your application.
     |
     */
-    'tenant_model' => \Stancl\Tenancy\Database\Models\Tenant::class,
+    'tenant_model' => env('MULTITENANT_PLUGIN_TENANT_MODEL', \Stancl\Tenancy\Database\Models\Tenant::class),
 
     /*
     |--------------------------------------------------------------------------
@@ -30,7 +30,7 @@ return [
     | The navigation group where tenant-related resources will be displayed.
     |
     */
-    'navigation_group' => 'Tenant Management',
+    'navigation_group' => env('MULTITENANT_PLUGIN_NAVIGATION_GROUP', 'Tenant Management'),
 
     /*
     |--------------------------------------------------------------------------
@@ -40,7 +40,7 @@ return [
     | Whether to enable the tenant dashboard page.
     |
     */
-    'enable_dashboard' => true,
+    'enable_dashboard' => env('MULTITENANT_PLUGIN_ENABLE_DASHBOARD', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -50,7 +50,7 @@ return [
     | Whether to enable the tenant management resource.
     |
     */
-    'enable_tenant_resource' => true,
+    'enable_tenant_resource' => env('MULTITENANT_PLUGIN_ENABLE_TENANT_RESOURCE', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -133,7 +133,7 @@ return [
     | Set to false if you want to manually handle tenant scoping.
     |
     */
-    'auto_scope_resources' => true,
+    'auto_scope_resources' => env('MULTITENANT_PLUGIN_AUTO_SCOPE_RESOURCES', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -171,9 +171,9 @@ return [
     |
     */
     'shield_integration' => [
-        'enabled' => true,
-        'auto_generate_permissions' => true,
-        'tenant_permission_suffix' => true,
+        'enabled' => env('MULTITENANT_PLUGIN_SHIELD_ENABLED', true),
+        'auto_generate_permissions' => env('MULTITENANT_PLUGIN_SHIELD_AUTO_GENERATE_PERMISSIONS', true),
+        'tenant_permission_suffix' => env('MULTITENANT_PLUGIN_SHIELD_TENANT_PERMISSION_SUFFIX', true),
         'default_roles' => [
             'tenant_admin' => 'Tenant Administrator',
             'tenant_manager' => 'Tenant Manager',
@@ -194,4 +194,6 @@ return [
         'page' => 'view_{page}_{tenant}',
         'custom' => '{permission}_{tenant}',
     ],
+
+    'super_admin_role' => env('MULTITENANT_PLUGIN_SUPER_ADMIN_ROLE', 'super_admin'), // .env: MULTITENANT_PLUGIN_SUPER_ADMIN_ROLE
 ];

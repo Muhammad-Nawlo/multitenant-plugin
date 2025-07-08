@@ -154,8 +154,10 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
         // Register with all panels
         $this->app->booted(function () {
             if (class_exists(\Filament\Panel::class)) {
-                // The plugin will be registered through the plugin class
-                // This is just a fallback to ensure it's available
+                // Register the TenantManagementPanel
+                if (class_exists(\MuhammadNawlo\MultitenantPlugin\Panels\TenantManagementPanel::class)) {
+                    \Filament\Facades\Filament::registerPanel(\MuhammadNawlo\MultitenantPlugin\Panels\TenantManagementPanel::class);
+                }
             }
         });
     }

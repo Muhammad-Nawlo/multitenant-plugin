@@ -468,3 +468,30 @@ Please review [our security policy](../../security/policy) on how to report secu
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+## TenantManagementPanel
+
+This plugin provides a dedicated Filament panel for tenant management, accessible at `/tenant-management`.
+
+### Features
+- Isolated panel for managing tenants
+- Only users with the `super_admin` role can access this panel
+- Integrates with [stancl/tenancy](https://github.com/stancl/tenancy) and [Shield](https://github.com/filamentphp/shield)
+- All tenant management resources and pages are registered only in this panel
+
+### Dependencies
+- `stancl/tenancy`
+- `filamentphp/shield`
+
+### Access Control
+- The panel uses middleware to restrict access to users with a configurable super admin role:
+  - By default, only users with the `super_admin` role can access this panel.
+  - You can change the role name by setting `MULTITENANT_PLUGIN_SUPER_ADMIN_ROLE` in your `.env` file.
+    - Example: `MULTITENANT_PLUGIN_SUPER_ADMIN_ROLE=your_custom_role`
+  - If a user is not authenticated or does not have the configured role, they will receive a 403 error.
+
+### Testing
+1. Install this package in a Laravel app with Filament, stancl/tenancy, and Shield installed.
+2. Ensure your user has the `super_admin` role (using Spatie/Permission or Shield).
+3. Visit `/tenant-management` in your browser.
+4. Only super admins should be able to access and manage tenants.
