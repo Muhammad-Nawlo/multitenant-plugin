@@ -22,8 +22,6 @@ trait TenantAwareShieldResource
         return $query;
     }
 
-    
-
     public static function getNavigationGroup(): ?string
     {
         return 'Tenant Management';
