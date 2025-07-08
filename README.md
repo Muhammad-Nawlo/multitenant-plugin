@@ -61,6 +61,12 @@ $panel->plugins([
 ]);
 ```
 
+### Installation Notes
+- When you run the install command (`php artisan multitenant-plugin:install`), you will be prompted to publish the config files for:
+  - `stancl/tenancy`
+  - `filament-shield`
+- This ensures all required configuration files are available in your application for customization.
+
 ## Quick Start
 
 ### Making Resources Tenant-Aware
