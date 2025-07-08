@@ -2,12 +2,7 @@
 
 namespace MuhammadNawlo\MultitenantPlugin;
 
-use Filament\Support\Assets\AlpineComponent;
-use Filament\Support\Assets\Asset;
-use Filament\Support\Assets\Css;
-use Filament\Support\Assets\Js;
-use Filament\Support\Facades\FilamentAsset;
-use Filament\Support\Facades\FilamentIcon;
+
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
 use MuhammadNawlo\MultitenantPlugin\Commands\GenerateTenantPermissionsCommand;
@@ -82,20 +77,6 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
-        // Asset Registration
-        FilamentAsset::register(
-            $this->getAssets(),
-            $this->getAssetPackageName()
-        );
-
-        FilamentAsset::registerScriptData(
-            $this->getScriptData(),
-            $this->getAssetPackageName()
-        );
-
-        // Icon Registration
-        FilamentIcon::register($this->getIcons());
-
         // Register Filament Resources and Pages
         $this->registerFilamentComponents();
 
@@ -112,22 +93,7 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
         Testable::mixin(new TestsMultitenantPlugin);
     }
 
-    protected function getAssetPackageName(): ?string
-    {
-        return 'muhammad-nawlo/multitenant-plugin';
-    }
 
-    /**
-     * @return array<Asset>
-     */
-    protected function getAssets(): array
-    {
-        return [
-            // AlpineComponent::make('multitenant-plugin', __DIR__ . '/../resources/dist/components/multitenant-plugin.js'),
-            Css::make('multitenant-plugin-styles', __DIR__ . '/../resources/dist/multitenant-plugin.css'),
-            Js::make('multitenant-plugin-scripts', __DIR__ . '/../resources/dist/multitenant-plugin.js'),
-        ];
-    }
 
     /**
      * @return array<class-string>
@@ -141,29 +107,7 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
         ];
     }
 
-    /**
-     * @return array<string>
-     */
-    protected function getIcons(): array
-    {
-        return [];
-    }
 
-    /**
-     * @return array<string>
-     */
-    protected function getRoutes(): array
-    {
-        return [];
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    protected function getScriptData(): array
-    {
-        return [];
-    }
 
     /**
      * @return array<string>

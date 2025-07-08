@@ -22,16 +22,7 @@ trait TenantAwareShieldResource
         return $query;
     }
 
-    protected function getEloquentQuery(): Builder
-    {
-        $query = parent::getEloquentQuery();
-
-        if ($this->isTenantContext()) {
-            $query = $this->scopeToTenant($query);
-        }
-
-        return $query;
-    }
+    
 
     public static function getNavigationGroup(): ?string
     {
