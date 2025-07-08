@@ -9,9 +9,9 @@ use Stancl\Tenancy\TenancyManager;
 
 class TenantPermissionService
 {
-    protected TenancyManager $tenancyManager;
+    protected ?TenancyManager $tenancyManager;
 
-    public function __construct(TenancyManager $tenancyManager)
+    public function __construct(?TenancyManager $tenancyManager = null)
     {
         $this->tenancyManager = $tenancyManager;
     }
@@ -21,6 +21,9 @@ class TenantPermissionService
      */
     public function getCurrentTenant(): ?Tenant
     {
+        if (!$this->tenancyManager) {
+            return null;
+        }
         return $this->tenancyManager->tenant;
     }
 

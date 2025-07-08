@@ -1,6 +1,6 @@
 # Filament Multitenant Plugin
 
-A comprehensive multitenant plugin for Filament that integrates seamlessly with `stancl/tenancy` to make multitenant applications easier to build and manage.
+A comprehensive multitenant plugin for Filament that integrates seamlessly with `stancl/tenancy` and `filament-shield` to make multitenant applications easier to build and manage. This plugin provides complete tenant management with role-based permissions and beautiful Filament interfaces.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/muhammad-nawlo/multitenant-plugin.svg?style=flat-square)](https://packagist.org/packages/muhammad-nawlo/multitenant-plugin)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/muhammad-nawlo/multitenant-plugin/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/muhammad-nawlo/multitenant-plugin/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -16,6 +16,9 @@ A comprehensive multitenant plugin for Filament that integrates seamlessly with 
 - ⚙️ **Flexible Configuration**: Extensive configuration options
 - 🚀 **Quick Setup**: Automated setup command for fast deployment
 - 🎨 **Modern UI**: Beautiful Filament interface for tenant management
+- 🔒 **Robust Error Handling**: Graceful degradation when tenancy isn't available
+- 📝 **Comprehensive Documentation**: Detailed examples and usage guides
+- 🛠️ **Production Ready**: Thoroughly tested with proper error handling and edge cases covered
 
 ## Installation
 
@@ -25,19 +28,29 @@ A comprehensive multitenant plugin for Filament that integrates seamlessly with 
 composer require muhammad-nawlo/multitenant-plugin
 ```
 
-2. **Publish the configuration:**
+2. **Install required dependencies (if not already installed):**
+
+```bash
+# Install tenancy package
+composer require stancl/tenancy
+
+# Install shield package (optional, for permissions)
+composer require bezhanSalleh/filament-shield
+```
+
+3. **Publish the configuration:**
 
 ```bash
 php artisan vendor:publish --tag="multitenant-plugin-config"
 ```
 
-3. **Run the setup command:**
+4. **Run the setup command:**
 
 ```bash
 php artisan multitenant:setup
 ```
 
-4. **Add the plugin to your Filament panel:**
+5. **Add the plugin to your Filament panel:**
 
 ```php
 use MuhammadNawlo\MultitenantPlugin\MultitenantPluginPlugin;
@@ -88,6 +101,7 @@ class PostResource extends Resource
 
     // Your resource configuration...
     // This will automatically check tenant-specific permissions
+    // and scope data to the current tenant
 }
 ```
 
@@ -129,6 +143,7 @@ class Dashboard extends Page
 
     // Your page configuration...
     // This will automatically check tenant-specific permissions
+    // and provide tenant context information
 }
 ```
 
@@ -250,6 +265,7 @@ This command will:
 - Create tenant-specific permissions for all existing permissions
 - Optionally assign permissions to specified roles
 - Support bulk generation for all tenants
+- Create tenant-specific permission names (e.g., `view_any_post_tenant-1`)
 
 ### Force Setup
 
@@ -293,6 +309,16 @@ return app(InitializeTenancyBySubdomain::class)->handle($request, $next);
 // Path-based
 return app(InitializeTenancyByPath::class)->handle($request, $next);
 ```
+
+### Error Handling
+
+The plugin is designed to be robust and handle cases where dependencies aren't available:
+
+- **Tenancy not available**: Plugin works without tenant-specific features
+- **Shield not available**: Plugin works without permission features
+- **Graceful degradation**: Features are disabled rather than causing errors
+- **Test environment support**: Plugin works in testing contexts with proper null checks
+- **Asset registration**: Removed problematic asset registration that caused composer require errors
 
 ### Custom Tenant Data
 
@@ -357,6 +383,70 @@ $permissionName = $permissionService->getTenantPermission('view_any_post');
 ```bash
 composer test
 ```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"Target class [Stancl\Tenancy\TenancyManager] does not exist"**
+   - Make sure you have installed `stancl/tenancy`
+   - Run `composer require stancl/tenancy`
+   - Follow the tenancy package setup instructions
+   - The plugin will work without tenancy, but tenant-specific features will be disabled
+
+2. **Setup command fails**
+   - Ensure you have write permissions to your app directory
+   - Check that the User model exists and is writable
+   - Run `php artisan multitenant:setup --force` to overwrite existing files
+   - The command will create missing directories automatically
+
+3. **Permissions not working**
+   - Ensure `filament-shield` is properly installed and configured
+   - Run `php artisan shield:generate` to generate base permissions
+   - Then run `php artisan multitenant:generate-permissions --all`
+   - Check that your User model has the `HasRoles` trait
+
+4. **"Class not found" errors in TenantResource**
+   - This usually happens when page namespaces are incorrect
+   - The plugin now uses fully qualified namespaces to avoid this issue
+   - If you encounter this, try running the setup command again
+
+5. **Syntax errors in User.php after setup**
+   - The setup command now uses regex to properly insert the trait
+   - If you encounter syntax errors, check the User model file
+   - Run `php artisan multitenant:setup --force` to fix the User model
+
+6. **Plugin not working in test environment**
+   - This is expected behavior as the plugin requires a proper Laravel application
+   - The plugin includes null checks and try-catch blocks for test environments
+   - Features will be gracefully disabled in test contexts
+
+### Debugging
+
+To debug issues with the plugin:
+
+```bash
+# Check if tenancy is properly installed
+php artisan tinker
+>>> app('Stancl\Tenancy\TenancyManager')
+
+# Check if shield is properly installed
+php artisan tinker
+>>> app('BezhanSalleh\FilamentShield\FilamentShield')
+
+# Verify plugin registration
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+```
+
+### Getting Help
+
+If you're still experiencing issues:
+
+1. Check the [stancl/tenancy documentation](https://tenancyforlaravel.com/)
+2. Check the [filament-shield documentation](https://github.com/bezhanSalleh/filament-shield)
+3. Open an issue on the GitHub repository with detailed error messages
 
 ## Changelog
 

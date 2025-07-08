@@ -4,20 +4,23 @@ namespace MuhammadNawlo\MultitenantPlugin;
 
 class MultitenantPlugin
 {
-    protected TenancyManager $tenancyManager;
+    protected ?TenancyManager $tenancyManager;
 
-    public function __construct(TenancyManager $tenancyManager)
+    public function __construct(?TenancyManager $tenancyManager = null)
     {
-        $this->tenancyManager = $tenancyManager;
+        $this->tenancyManager = $tenancyManager ?? app(TenancyManager::class);
     }
 
-    public function getTenancyManager(): TenancyManager
+    public function getTenancyManager(): ?TenancyManager
     {
         return $this->tenancyManager;
     }
 
     public function getCurrentTenant()
     {
+        if (!$this->tenancyManager) {
+            return null;
+        }
         return $this->tenancyManager->tenant;
     }
 

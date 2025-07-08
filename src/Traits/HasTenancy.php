@@ -6,14 +6,19 @@ use Stancl\Tenancy\TenancyManager;
 
 trait HasTenancy
 {
-    protected function getTenancyManager(): TenancyManager
+    protected function getTenancyManager(): ?TenancyManager
     {
-        return app(TenancyManager::class);
+        try {
+            return app(TenancyManager::class);
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     protected function getCurrentTenant()
     {
-        return $this->getTenancyManager()->tenant;
+        $manager = $this->getTenancyManager();
+        return $manager ? $manager->tenant : null;
     }
 
     protected function getTenantId()
