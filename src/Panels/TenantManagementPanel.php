@@ -7,7 +7,7 @@ use MuhammadNawlo\MultitenantPlugin\Resources\TenantResource;
 
 class TenantManagementPanel extends Panel
 {
-    public function boot()
+    public function boot(): void
     {
         $this->id('tenant-management');
         $this->path('tenant-management'); // URL prefix: /tenant-management
