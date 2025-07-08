@@ -59,7 +59,7 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
     public function packageRegistered(): void
     {
         // Register the plugin with Filament
-        $this->app->singleton(MultitenantPluginPlugin::class);
+        $this->app->singleton(MultitenantPluginManager::class);
 
         // Register the main plugin class
         $this->app->singleton('multitenant-plugin', function ($app) {

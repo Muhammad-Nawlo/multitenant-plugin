@@ -5,7 +5,7 @@ namespace MuhammadNawlo\MultitenantPlugin;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
-class MultitenantPluginPlugin implements Plugin
+class MultitenantPluginManager implements Plugin
 {
     public function getId(): string
     {
@@ -49,4 +49,4 @@ class MultitenantPluginPlugin implements Plugin
 
         return $plugin;
     }
-}
+} 

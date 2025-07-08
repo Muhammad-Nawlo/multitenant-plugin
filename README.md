@@ -53,11 +53,11 @@ php artisan multitenant:setup
 5. **Add the plugin to your Filament panel:**
 
 ```php
-use MuhammadNawlo\MultitenantPlugin\MultitenantPluginPlugin;
+use MuhammadNawlo\MultitenantPlugin\MultitenantPluginManager;
 
 // In your panel configuration
 $panel->plugins([
-    MultitenantPluginPlugin::make(),
+    MultitenantPluginManager::make(),
 ]);
 ```
 
@@ -501,3 +501,7 @@ This plugin provides a dedicated Filament panel for tenant management, accessibl
 2. Ensure your user has the `super_admin` role (using Spatie/Permission or Shield).
 3. Visit `/tenant-management` in your browser.
 4. Only super admins should be able to access and manage tenants.
+
+### Plugin Manager Class
+- The main plugin manager class is now `MultitenantPluginManager` (previously `MultitenantPluginPlugin`).
+- Use `MuhammadNawlo\MultitenantPlugin\MultitenantPluginManager` for any manual registration or advanced usage.
