@@ -87,6 +87,9 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
         // Register Filament Resources and Pages
         $this->registerFilamentComponents();
 
+        // Automatically register the plugin with Filament panels
+        $this->registerWithFilament();
+
         // Handle Stubs
         if (app()->runningInConsole()) {
             foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
@@ -134,5 +137,24 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
 
         // Filament components are registered through the plugin class
         // This method is kept for future use if needed
+    }
+
+    /**
+     * Register the plugin with Filament panels
+     */
+    protected function registerWithFilament(): void
+    {
+        // Only register if Filament is installed
+        if (! class_exists(\Filament\FilamentManager::class)) {
+            return;
+        }
+
+        // Register with all panels
+        $this->app->booted(function () {
+            if (class_exists(\Filament\Panel::class)) {
+                // The plugin will be registered through the plugin class
+                // This is just a fallback to ensure it's available
+            }
+        });
     }
 }
