@@ -30,22 +30,17 @@ trait TenantAwareShieldPage
         ];
     }
 
-    protected function canAccess(): bool
+    public static function canAccess(): bool
     {
-        if (! parent::canAccess()) {
+        $instance = new static();
+        if (!parent::canAccess()) {
             return false;
         }
-
-        $tenant = $this->getCurrentTenant();
-
+        $tenant = $instance->getCurrentTenant();
         if ($tenant) {
-            // Check tenant-specific permission for this page
             $permission = 'view_' . static::getSlug() . '_' . $tenant->getTenantKey();
-
             return auth()->user()->can($permission);
         }
-
-        // In central context, check global permission
         return auth()->user()->can('view_' . static::getSlug());
     }
 

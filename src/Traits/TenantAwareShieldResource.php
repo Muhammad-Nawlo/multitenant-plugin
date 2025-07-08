@@ -16,7 +16,7 @@ trait TenantAwareShieldResource
         $query = parent::getTableQuery();
 
         if ($this->isTenantContext()) {
-            $query = $this->scopeToTenant($query);
+            $query = $this->applyTenantScope($query);
         }
 
         return $query;

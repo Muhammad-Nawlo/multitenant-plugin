@@ -23,7 +23,7 @@ trait HasTenancy
         return $tenant ? $tenant->getTenantKey() : null;
     }
 
-    protected function scopeToTenant($query)
+    protected function applyTenantScope($query)
     {
         $tenantId = $this->getTenantId();
 

@@ -65,14 +65,32 @@ class SetupTenancyCommand extends Command
     protected function createTenantModel(): void
     {
         $modelPath = app_path('Models/Tenant.php');
+        $modelDir = app_path('Models');
 
         if (! File::exists($modelPath)) {
             $this->info('Creating Tenant model...');
 
-            $stub = File::get(__DIR__ . '/../../stubs/Tenant.php.stub');
-            File::put($modelPath, $stub);
+            try {
+                // Ensure the models directory exists
+                if (! File::exists($modelDir)) {
+                    File::makeDirectory($modelDir, 0755, true);
+                    $this->info('Created models directory: ' . $modelDir);
+                }
 
-            $this->info('Tenant model created at: ' . $modelPath);
+                $stubPath = __DIR__ . '/../../stubs/Tenant.php.stub';
+                
+                if (! File::exists($stubPath)) {
+                    $this->error('Stub file not found: ' . $stubPath);
+                    return;
+                }
+
+                $stub = File::get($stubPath);
+                File::put($modelPath, $stub);
+
+                $this->info('Tenant model created at: ' . $modelPath);
+            } catch (\Exception $e) {
+                $this->error('Failed to create Tenant model: ' . $e->getMessage());
+            }
         }
     }
 
@@ -110,14 +128,32 @@ class SetupTenancyCommand extends Command
     protected function createTenantMiddleware(): void
     {
         $middlewarePath = app_path('Http/Middleware/EnsureValidTenantSession.php');
+        $middlewareDir = app_path('Http/Middleware');
 
         if (! File::exists($middlewarePath)) {
             $this->info('Creating tenant middleware...');
 
-            $stub = File::get(__DIR__ . '/../../stubs/EnsureValidTenantSession.php.stub');
-            File::put($middlewarePath, $stub);
+            try {
+                // Ensure the middleware directory exists
+                if (! File::exists($middlewareDir)) {
+                    File::makeDirectory($middlewareDir, 0755, true);
+                    $this->info('Created middleware directory: ' . $middlewareDir);
+                }
 
-            $this->info('Tenant middleware created at: ' . $middlewarePath);
+                $stubPath = __DIR__ . '/../../stubs/EnsureValidTenantSession.php.stub';
+                
+                if (! File::exists($stubPath)) {
+                    $this->error('Stub file not found: ' . $stubPath);
+                    return;
+                }
+
+                $stub = File::get($stubPath);
+                File::put($middlewarePath, $stub);
+
+                $this->info('Tenant middleware created at: ' . $middlewarePath);
+            } catch (\Exception $e) {
+                $this->error('Failed to create tenant middleware: ' . $e->getMessage());
+            }
         }
     }
 }
