@@ -21,9 +21,10 @@ class TenantPermissionService
      */
     public function getCurrentTenant(): ?Tenant
     {
-        if (!$this->tenancyManager) {
+        if (! $this->tenancyManager) {
             return null;
         }
+
         return $this->tenancyManager->tenant;
     }
 

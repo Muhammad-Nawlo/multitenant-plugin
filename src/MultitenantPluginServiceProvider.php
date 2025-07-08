@@ -63,6 +63,7 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
         $this->app->singleton('multitenant-plugin', function ($app) {
             try {
                 $tenancyManager = $app->make(\Stancl\Tenancy\TenancyManager::class);
+
                 return new \MuhammadNawlo\MultitenantPlugin\MultitenantPlugin($tenancyManager);
             } catch (\Exception $e) {
                 // If tenancy manager is not available, create plugin without it
@@ -74,6 +75,7 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
         $this->app->singleton('tenant-permission-service', function ($app) {
             try {
                 $tenancyManager = $app->make(\Stancl\Tenancy\TenancyManager::class);
+
                 return new \MuhammadNawlo\MultitenantPlugin\Services\TenantPermissionService($tenancyManager);
             } catch (\Exception $e) {
                 // If tenancy manager is not available, return null

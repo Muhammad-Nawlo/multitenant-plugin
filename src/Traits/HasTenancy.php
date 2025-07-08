@@ -18,6 +18,7 @@ trait HasTenancy
     protected function getCurrentTenant()
     {
         $manager = $this->getTenancyManager();
+
         return $manager ? $manager->tenant : null;
     }
 
