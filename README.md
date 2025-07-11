@@ -38,10 +38,17 @@ composer require stancl/tenancy
 composer require bezhanSalleh/filament-shield
 ```
 
-3. **Publish the configuration:**
+3. **Publish required configurations:**
 
 ```bash
+# Publish multitenant plugin config
 php artisan vendor:publish --tag="multitenant-plugin-config"
+
+# Publish tenancy config (if not already published)
+php artisan vendor:publish --provider="Stancl\Tenancy\TenancyServiceProvider" --tag="config"
+
+# Publish shield config (if using shield)
+php artisan vendor:publish --provider="BezhanSalleh\FilamentShield\FilamentShieldServiceProvider" --tag="config"
 ```
 
 4. **Run the setup command:**
@@ -62,10 +69,9 @@ $panel->plugins([
 ```
 
 ### Installation Notes
-- When you run the install command (`php artisan multitenant-plugin:install`), you will be prompted to publish the config files for:
-  - `stancl/tenancy`
-  - `filament-shield`
-- This ensures all required configuration files are available in your application for customization.
+- The plugin depends on `stancl/tenancy` and `bezhansalleh/filament-shield` but does not automatically publish their configs
+- You need to manually publish the config files for these dependencies if you haven't already
+- This gives you full control over the configuration of these packages
 
 ## Quick Start
 

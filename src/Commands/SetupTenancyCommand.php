@@ -23,20 +23,6 @@ class SetupTenancyCommand extends Command
             return 1;
         }
 
-        // Publish tenancy configuration
-        $this->info('Publishing tenancy configuration...');
-        Artisan::call('vendor:publish', [
-            '--provider' => 'Stancl\Tenancy\TenancyServiceProvider',
-            '--tag' => 'config',
-        ]);
-
-        // Publish tenancy migrations
-        $this->info('Publishing tenancy migrations...');
-        Artisan::call('vendor:publish', [
-            '--provider' => 'Stancl\Tenancy\TenancyServiceProvider',
-            '--tag' => 'migrations',
-        ]);
-
         // Run migrations
         $this->info('Running migrations...');
         Artisan::call('migrate');

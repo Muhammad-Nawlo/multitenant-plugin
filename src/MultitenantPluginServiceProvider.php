@@ -31,8 +31,6 @@ class MultitenantPluginServiceProvider extends PackageServiceProvider
                 $command
                     ->publishConfigFile()
                     ->publishMigrations()
-                    ->publish('tenancy-config', 'tenancy-config')
-                    ->publish('filament-shield-config', 'filament-shield-config')
                     ->askToRunMigrations()
                     ->askToStarRepoOnGitHub('muhammad-nawlo/multitenant-plugin');
             });
