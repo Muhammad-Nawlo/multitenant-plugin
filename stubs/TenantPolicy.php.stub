@@ -1,0 +1,44 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ userModel }};
+use {{ model }};
+
+class TenantPolicy
+{
+    public function viewAny({{ userModelVar }} $user)
+    {
+        return $user->can('view_any_tenant');
+    }
+
+    public function view({{ userModelVar }} $user, {{ modelVar }} $tenant)
+    {
+        return $user->can('view_tenant');
+    }
+
+    public function create({{ userModelVar }} $user)
+    {
+        return $user->can('create_tenant');
+    }
+
+    public function update({{ userModelVar }} $user, {{ modelVar }} $tenant)
+    {
+        return $user->can('update_tenant');
+    }
+
+    public function delete({{ userModelVar }} $user, {{ modelVar }} $tenant)
+    {
+        return $user->can('delete_tenant');
+    }
+
+    public function restore({{ userModelVar }} $user, {{ modelVar }} $tenant)
+    {
+        return $user->can('restore_tenant');
+    }
+
+    public function forceDelete({{ userModelVar }} $user, {{ modelVar }} $tenant)
+    {
+        return $user->can('force_delete_tenant');
+    }
+} 

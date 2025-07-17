@@ -10,9 +10,6 @@ All notable changes to `multitenant-plugin` will be documented in this file.
 - Tenant dashboard with statistics and quick actions
 - `TenantAwareResource` trait for making Filament resources tenant-aware
 - `TenantAwarePage` trait for making Filament pages tenant-aware
-- `TenantAwareShieldResource` trait for resources with tenant-specific permissions
-- `TenantAwareShieldPage` trait for pages with tenant-specific permissions
-- `HasTenancy` trait for basic tenancy functionality
 - Comprehensive configuration system
 - Automated setup command (`php artisan multitenant:setup`)
 - Tenant resource with full management capabilities
@@ -21,7 +18,7 @@ All notable changes to `multitenant-plugin` will be documented in this file.
 - Example resources and documentation
 - Stub files for Tenant model and middleware
 - Integration with `stancl/tenancy` package
-- Integration with `bezhansalleh/filament-shield` package
+- Integration with `spatie/laravel-permission` package
 - Support for domain, subdomain, and path-based tenancy
 - Custom tenant data storage
 - Navigation grouping for tenant management

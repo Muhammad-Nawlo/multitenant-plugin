@@ -1,6 +1,6 @@
 # Filament Multitenant Plugin
 
-A comprehensive multitenant plugin for Filament that integrates seamlessly with `stancl/tenancy` and `filament-shield` to make multitenant applications easier to build and manage. This plugin provides complete tenant management with role-based permissions and beautiful Filament interfaces.
+A comprehensive multitenant plugin for Filament that integrates seamlessly with `stancl/tenancy` and `spatie/laravel-permission` to make multitenant applications easier to build and manage. This plugin provides complete tenant management with role-based permissions and beautiful Filament interfaces.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/muhammad-nawlo/multitenant-plugin.svg?style=flat-square)](https://packagist.org/packages/muhammad-nawlo/multitenant-plugin)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/muhammad-nawlo/multitenant-plugin/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/muhammad-nawlo/multitenant-plugin/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -12,7 +12,7 @@ A comprehensive multitenant plugin for Filament that integrates seamlessly with 
 - 🏢 **Tenant Management**: Complete CRUD operations for tenants through Filament
 - 📊 **Tenant Dashboard**: Beautiful dashboard with tenant statistics and quick actions
 - 🔧 **Easy Integration**: Simple traits to make your resources tenant-aware
-- 🛡️ **Shield Integration**: Role-based permissions with tenant-specific access control
+- 🔒 **Role-based Permissions**: Tenant-specific access control using Spatie Laravel Permission
 - ⚙️ **Flexible Configuration**: Extensive configuration options
 - 🚀 **Quick Setup**: Automated setup command for fast deployment
 - 🎨 **Modern UI**: Beautiful Filament interface for tenant management
@@ -34,8 +34,8 @@ composer require muhammad-nawlo/multitenant-plugin
 # Install tenancy package
 composer require stancl/tenancy
 
-# Install shield package (optional, for permissions)
-composer require bezhanSalleh/filament-shield
+# Install spatie/laravel-permission for permissions
+composer require spatie/laravel-permission
 ```
 
 3. **Publish required configurations:**
@@ -47,8 +47,8 @@ php artisan vendor:publish --tag="multitenant-plugin-config"
 # Publish tenancy config (if not already published)
 php artisan vendor:publish --provider="Stancl\Tenancy\TenancyServiceProvider" --tag="config"
 
-# Publish shield config (if using shield)
-php artisan vendor:publish --provider="BezhanSalleh\FilamentShield\FilamentShieldServiceProvider" --tag="config"
+# Publish spatie/laravel-permission config (if using permissions)
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="config"
 ```
 
 4. **Run the setup command:**
@@ -69,7 +69,7 @@ $panel->plugins([
 ```
 
 ### Installation Notes
-- The plugin depends on `stancl/tenancy` and `bezhansalleh/filament-shield` but does not automatically publish their configs
+- The plugin depends on `stancl/tenancy` and `spatie/laravel-permission` but does not automatically publish their configs
 - You need to manually publish the config files for these dependencies if you haven't already
 - This gives you full control over the configuration of these packages
 
@@ -95,9 +95,9 @@ class PostResource extends Resource
 }
 ```
 
-### Making Resources Tenant-Aware with Shield Permissions
+### Making Resources Tenant-Aware with Permissions
 
-Use the `TenantAwareShieldResource` trait for resources that need both tenancy and permissions:
+Use the `TenantAwareResource` trait for resources that need both tenancy and permissions:
 
 ```php
 <?php
@@ -105,11 +105,11 @@ Use the `TenantAwareShieldResource` trait for resources that need both tenancy a
 namespace App\Filament\Resources;
 
 use Filament\Resources\Resource;
-use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareShieldResource;
+use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareResource;
 
 class PostResource extends Resource
 {
-    use TenantAwareShieldResource;
+    use TenantAwareResource;
 
     // Your resource configuration...
     // This will automatically check tenant-specific permissions
@@ -137,9 +137,9 @@ class Dashboard extends Page
 }
 ```
 
-### Making Pages Tenant-Aware with Shield Permissions
+### Making Pages Tenant-Aware with Permissions
 
-Use the `TenantAwareShieldPage` trait for pages that need both tenancy and permissions:
+Use the `TenantAwarePage` trait for pages that need both tenancy and permissions:
 
 ```php
 <?php
@@ -147,11 +147,11 @@ Use the `TenantAwareShieldPage` trait for pages that need both tenancy and permi
 namespace App\Filament\Pages;
 
 use Filament\Pages\Page;
-use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareShieldPage;
+use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwarePage;
 
 class Dashboard extends Page
 {
-    use TenantAwareShieldPage;
+    use TenantAwarePage;
 
     // Your page configuration...
     // This will automatically check tenant-specific permissions
@@ -287,6 +287,52 @@ php artisan multitenant:setup --force
 
 Force setup even if tenancy is already configured.
 
+### Grant All Permissions to Super Admin
+
+This command grants all permissions in the database to the super admin role (configurable via `MULTITENANT_PLUGIN_SUPER_ADMIN_ROLE` in your `.env`).
+
+```bash
+php artisan multitenant:grant-super-admin
+```
+
+- Finds or creates the super admin role.
+- Assigns all permissions to this role, ensuring super admins can access all resources, pages, and widgets.
+
+### Generate All Permissions for a Resource
+
+This command generates all standard permissions (view, create, update, delete, etc.) for a given Filament resource.
+
+```bash
+php artisan multitenant:generate-resource-permissions {resource}
+```
+
+- `{resource}`: The fully qualified class name of the resource (e.g., `App\Filament\Resources\PostResource`).
+- Permissions generated: `view_any_{resource}`, `view_{resource}`, `create_{resource}`, `update_{resource}`, `delete_{resource}`, `delete_any_{resource}`, `restore_{resource}`, `force_delete_{resource}`.
+- Uses the resource's `getSlug()` if available, otherwise uses a snake_case version of the class name.
+
+### Generate Permissions and Policies for Panels/Resources
+
+This command generates all standard permissions (and optionally policy stubs) for resources registered to your Filament panels, similar to Shield's generator.
+
+```bash
+php artisan multitenant:generate [--all] [--panel=PanelClass] [--resource=ResourceClass] [--exclude] [--policies] [--minimal]
+```
+
+**Options:**
+- `--all` — Generate for all resources in all panels
+- `--panel=` — Only for a specific panel (FQCN)
+- `--resource=` — Only for specific resources (comma-separated, by class basename)
+- `--exclude` — Exclude the given resources
+- `--policies` — Also generate policy stubs (extendable)
+- `--minimal` — Minimal output (just counts)
+
+**Example:**
+```bash
+php artisan multitenant:generate --all --policies
+```
+
+This will generate all permissions and policy stubs for all resources in all panels.
+
 ## Middleware
 
 The plugin includes middleware for tenant initialization:
@@ -327,7 +373,7 @@ return app(InitializeTenancyByPath::class)->handle($request, $next);
 The plugin is designed to be robust and handle cases where dependencies aren't available:
 
 - **Tenancy not available**: Plugin works without tenant-specific features
-- **Shield not available**: Plugin works without permission features
+- **Permissions not available**: Plugin works without permission features
 - **Graceful degradation**: Features are disabled rather than causing errors
 - **Test environment support**: Plugin works in testing contexts with proper null checks
 - **Asset registration**: Removed problematic asset registration that caused composer require errors
@@ -413,8 +459,8 @@ composer test
    - The command will create missing directories automatically
 
 3. **Permissions not working**
-   - Ensure `filament-shield` is properly installed and configured
-   - Run `php artisan shield:generate` to generate base permissions
+   - Ensure `spatie/laravel-permission` is properly installed and configured
+   - Run `php artisan permission:create-role super_admin` to create a super admin role
    - Then run `php artisan multitenant:generate-permissions --all`
    - Check that your User model has the `HasRoles` trait
 
@@ -442,9 +488,9 @@ To debug issues with the plugin:
 php artisan tinker
 >>> app('Stancl\Tenancy\TenancyManager')
 
-# Check if shield is properly installed
+# Check if spatie/laravel-permission is properly installed
 php artisan tinker
->>> app('BezhanSalleh\FilamentShield\FilamentShield')
+>>> app('Spatie\Permission\PermissionRegistrar')
 
 # Verify plugin registration
 php artisan config:clear
@@ -457,7 +503,7 @@ php artisan view:clear
 If you're still experiencing issues:
 
 1. Check the [stancl/tenancy documentation](https://tenancyforlaravel.com/)
-2. Check the [filament-shield documentation](https://github.com/bezhanSalleh/filament-shield)
+2. Check the [spatie/laravel-permission documentation](https://github.com/spatie/laravel-permission)
 3. Open an issue on the GitHub repository with detailed error messages
 
 ## Changelog
@@ -488,12 +534,12 @@ This plugin provides a dedicated Filament panel for tenant management, accessibl
 ### Features
 - Isolated panel for managing tenants
 - Only users with the `super_admin` role can access this panel
-- Integrates with [stancl/tenancy](https://github.com/stancl/tenancy) and [Shield](https://github.com/filamentphp/shield)
+- Integrates with [stancl/tenancy](https://github.com/stancl/tenancy) and [spatie/laravel-permission](https://github.com/spatie/laravel-permission)
 - All tenant management resources and pages are registered only in this panel
 
 ### Dependencies
 - `stancl/tenancy`
-- `filamentphp/shield`
+- `spatie/laravel-permission`
 
 ### Access Control
 - The panel uses middleware to restrict access to users with a configurable super admin role:
@@ -503,7 +549,7 @@ This plugin provides a dedicated Filament panel for tenant management, accessibl
   - If a user is not authenticated or does not have the configured role, they will receive a 403 error.
 
 ### Testing
-1. Install this package in a Laravel app with Filament, stancl/tenancy, and Shield installed.
+1. Install this package in a Laravel app with Filament, stancl/tenancy, and spatie/laravel-permission installed.
 2. Ensure your user has the `super_admin` role (using Spatie/Permission or Shield).
 3. Visit `/tenant-management` in your browser.
 4. Only super admins should be able to access and manage tenants.

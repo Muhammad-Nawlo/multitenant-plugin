@@ -7,17 +7,17 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareShieldResource;
+use MuhammadNawlo\MultitenantPlugin\Traits\TenantAwareResource;
 
 /**
- * Example resource demonstrating shield integration with tenant permissions
+ * Example resource demonstrating tenant permissions
  *
- * This resource shows how to use TenantAwareShieldResource trait
- * to combine tenancy with Filament Shield permissions.
+ * This resource shows how to use TenantAwareResource trait
+ * to combine tenancy with Spatie Laravel Permission.
  */
-class ExampleShieldAwareResource extends Resource
+class ExampleTenantAwareResource extends Resource
 {
-    use TenantAwareShieldResource;
+    use TenantAwareResource;
 
     protected static ?string $model = \App\Models\Example::class;
 
@@ -58,42 +58,9 @@ class ExampleShieldAwareResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
-                    ->label('Title')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('content')
-                    ->label('Content')
-                    ->limit(50)
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('is_published')
-                    ->label('Published')
-                    ->boolean(),
-                Tables\Columns\BadgeColumn::make('status')
-                    ->label('Status')
-                    ->colors([
-                        'gray' => 'draft',
-                        'warning' => 'review',
-                        'success' => 'published',
-                        'danger' => 'archived',
-                    ]),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Created At')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                Tables\Filters\TernaryFilter::make('is_published')
-                    ->label('Published Status'),
-                Tables\Filters\SelectFilter::make('status')
-                    ->label('Status')
-                    ->options([
-                        'draft' => 'Draft',
-                        'review' => 'Under Review',
-                        'published' => 'Published',
-                        'archived' => 'Archived',
-                    ]),
+                Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\BooleanColumn::make('is_published'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()

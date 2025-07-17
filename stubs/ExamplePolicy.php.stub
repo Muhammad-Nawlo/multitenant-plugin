@@ -1,0 +1,44 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ userModel }};
+use {{ model }};
+
+class ExamplePolicy
+{
+    public function viewAny({{ userModelVar }} $user)
+    {
+        return $user->can('view_any_example');
+    }
+
+    public function view({{ userModelVar }} $user, {{ modelVar }} $example)
+    {
+        return $user->can('view_example');
+    }
+
+    public function create({{ userModelVar }} $user)
+    {
+        return $user->can('create_example');
+    }
+
+    public function update({{ userModelVar }} $user, {{ modelVar }} $example)
+    {
+        return $user->can('update_example');
+    }
+
+    public function delete({{ userModelVar }} $user, {{ modelVar }} $example)
+    {
+        return $user->can('delete_example');
+    }
+
+    public function restore({{ userModelVar }} $user, {{ modelVar }} $example)
+    {
+        return $user->can('restore_example');
+    }
+
+    public function forceDelete({{ userModelVar }} $user, {{ modelVar }} $example)
+    {
+        return $user->can('force_delete_example');
+    }
+} 

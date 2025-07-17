@@ -36,6 +36,9 @@ class SetupTenancyCommand extends Command
         // Create middleware
         $this->createTenantMiddleware();
 
+        // Publish policy stubs for resources
+        $this->publishPolicyStubs();
+
         $this->info('Multitenant plugin setup completed successfully!');
         $this->info('Next steps:');
         $this->info('1. Configure your tenant domains in the tenancy config');
@@ -144,6 +147,54 @@ class SetupTenancyCommand extends Command
             } catch (\Exception $e) {
                 $this->error('Failed to create tenant middleware: ' . $e->getMessage());
             }
+        }
+    }
+
+    protected function publishPolicyStubs(): void
+    {
+        $policies = [
+            [
+                'stub' => __DIR__ . '/../../stubs/TenantPolicy.php.stub',
+                'target' => app_path('Policies/TenantPolicy.php'),
+                'namespace' => 'App\\Policies',
+                'model' => 'Stancl\\Tenancy\\Database\\Models\\Tenant',
+                'modelVar' => 'tenant',
+                'policyClass' => 'TenantPolicy',
+            ],
+            [
+                'stub' => __DIR__ . '/../../stubs/ExamplePolicy.php.stub',
+                'target' => app_path('Policies/ExamplePolicy.php'),
+                'namespace' => 'App\\Policies',
+                'model' => 'App\\Models\\Example',
+                'modelVar' => 'example',
+                'policyClass' => 'ExamplePolicy',
+            ],
+        ];
+        $userModel = 'App\\Models\\User';
+        $userModelVar = 'user';
+
+        foreach ($policies as $policy) {
+            if (!File::exists($policy['stub'])) {
+                $this->warn('Policy stub not found: ' . $policy['stub']);
+                continue;
+            }
+            $stub = File::get($policy['stub']);
+            $stub = str_replace([
+                '{{ namespace }}',
+                '{{ userModel }}',
+                '{{ userModelVar }}',
+                '{{ model }}',
+                '{{ modelVar }}',
+            ], [
+                $policy['namespace'],
+                $userModel,
+                $userModelVar,
+                $policy['model'],
+                $policy['modelVar'],
+            ], $stub);
+            File::ensureDirectoryExists(app_path('Policies'));
+            File::put($policy['target'], $stub);
+            $this->info($policy['policyClass'] . ' published to: ' . $policy['target']);
         }
     }
 }

@@ -164,25 +164,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Shield Integration
-    |--------------------------------------------------------------------------
-    |
-    | Configuration for Filament Shield integration.
-    |
-    */
-    'shield_integration' => [
-        'enabled' => env('MULTITENANT_PLUGIN_SHIELD_ENABLED', true),
-        'auto_generate_permissions' => env('MULTITENANT_PLUGIN_SHIELD_AUTO_GENERATE_PERMISSIONS', true),
-        'tenant_permission_suffix' => env('MULTITENANT_PLUGIN_SHIELD_TENANT_PERMISSION_SUFFIX', true),
-        'default_roles' => [
-            'tenant_admin' => 'Tenant Administrator',
-            'tenant_manager' => 'Tenant Manager',
-            'tenant_user' => 'Tenant User',
-        ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Permission Patterns
     |--------------------------------------------------------------------------
     |
