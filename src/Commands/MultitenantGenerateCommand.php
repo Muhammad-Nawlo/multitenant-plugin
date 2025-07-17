@@ -5,7 +5,6 @@ namespace MuhammadNawlo\MultitenantPlugin\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Arr;
 
 class MultitenantGenerateCommand extends Command
 {
@@ -26,7 +25,9 @@ class MultitenantGenerateCommand extends Command
         $targetPanel = $this->option('panel');
         $resources = [];
         foreach ($panels as $panelClass) {
-            if ($targetPanel && $panelClass !== $targetPanel) continue;
+            if ($targetPanel && $panelClass !== $targetPanel) {
+                continue;
+            }
             $resources = array_merge($resources, $this->getPanelResources($panelClass));
         }
         $resources = array_unique($resources);
@@ -43,15 +44,16 @@ class MultitenantGenerateCommand extends Command
         if ($this->option('minimal')) {
             $this->info("Permissions created: $created");
             if ($this->option('policies')) {
-                $this->info("Policies generated: " . count(array_filter($policies)));
+                $this->info('Policies generated: ' . count(array_filter($policies)));
             }
         } else {
             $this->table(
                 ['Resource', 'Permissions', 'Policy'],
                 collect($selectedResources)->map(function ($resource, $i) use ($policies) {
                     $slug = $this->getResourceSlug($resource);
-                    $perms = implode(", ", $this->getPermissionNames($slug));
+                    $perms = implode(', ', $this->getPermissionNames($slug));
                     $policy = isset($policies[$i]) && $policies[$i] ? '✅' : '❌';
+
                     return [
                         $resource,
                         $perms,
@@ -69,13 +71,14 @@ class MultitenantGenerateCommand extends Command
         $panels = [];
         foreach (glob($panelPath . '/*.php') as $panelFile) {
             $panelClass = $panelNamespace . '\\' . pathinfo($panelFile, PATHINFO_FILENAME);
-            if (!class_exists($panelClass)) {
+            if (! class_exists($panelClass)) {
                 require_once $panelFile;
             }
             if (class_exists($panelClass)) {
                 $panels[] = $panelClass;
             }
         }
+
         return $panels;
     }
 
@@ -89,6 +92,7 @@ class MultitenantGenerateCommand extends Command
         foreach ($lines as $line) {
             if (Str::contains($line, '->resources([')) {
                 $inResources = true;
+
                 continue;
             }
             if ($inResources) {
@@ -100,6 +104,7 @@ class MultitenantGenerateCommand extends Command
                 }
             }
         }
+
         return $resources;
     }
 
@@ -113,11 +118,12 @@ class MultitenantGenerateCommand extends Command
         if ($input) {
             $inputArr = array_map('trim', explode(',', $input));
             if ($exclude) {
-                return array_filter($resources, fn($r) => !in_array(class_basename($r), $inputArr));
+                return array_filter($resources, fn ($r) => ! in_array(class_basename($r), $inputArr));
             } else {
-                return array_filter($resources, fn($r) => in_array(class_basename($r), $inputArr));
+                return array_filter($resources, fn ($r) => in_array(class_basename($r), $inputArr));
             }
         }
+
         return $resources;
     }
 
@@ -137,11 +143,12 @@ class MultitenantGenerateCommand extends Command
         $resourceSlug = $this->getResourceSlug($resourceClass);
         foreach ($actions as $action) {
             $permissionName = $action . '_' . $resourceSlug;
-            if (!Permission::where('name', $permissionName)->exists()) {
+            if (! Permission::where('name', $permissionName)->exists()) {
                 Permission::create(['name' => $permissionName, 'guard_name' => 'web']);
                 $created++;
             }
         }
+
         return $created;
     }
 
@@ -165,6 +172,7 @@ class MultitenantGenerateCommand extends Command
             return $resourceClass::getSlug();
         }
         $basename = class_basename($resourceClass);
+
         return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $basename));
     }
 
@@ -174,4 +182,4 @@ class MultitenantGenerateCommand extends Command
         // For now, just return true to indicate a policy would be generated
         return true;
     }
-} 
+}

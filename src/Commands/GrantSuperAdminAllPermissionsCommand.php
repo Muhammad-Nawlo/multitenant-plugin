@@ -3,12 +3,13 @@
 namespace MuhammadNawlo\MultitenantPlugin\Commands;
 
 use Illuminate\Console\Command;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class GrantSuperAdminAllPermissionsCommand extends Command
 {
     protected $signature = 'multitenant:grant-super-admin';
+
     protected $description = 'Grant all permissions to the super_admin role';
 
     public function handle()
@@ -17,6 +18,6 @@ class GrantSuperAdminAllPermissionsCommand extends Command
         $role = Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);
         $permissions = Permission::all();
         $role->syncPermissions($permissions);
-        $this->info("Granted all permissions (" . $permissions->count() . ") to role: {$roleName}");
+        $this->info('Granted all permissions (' . $permissions->count() . ") to role: {$roleName}");
     }
-} 
+}

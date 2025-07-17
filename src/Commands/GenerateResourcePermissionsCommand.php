@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Permission;
 class GenerateResourcePermissionsCommand extends Command
 {
     protected $signature = 'multitenant:generate-resource-permissions {resource}';
+
     protected $description = 'Generate all standard permissions for a given resource';
 
     public function handle()
@@ -27,7 +28,7 @@ class GenerateResourcePermissionsCommand extends Command
         $created = 0;
         foreach ($actions as $action) {
             $permissionName = $action . '_' . $resourceSlug;
-            if (!Permission::where('name', $permissionName)->exists()) {
+            if (! Permission::where('name', $permissionName)->exists()) {
                 Permission::create(['name' => $permissionName, 'guard_name' => 'web']);
                 $this->info("Created permission: {$permissionName}");
                 $created++;
@@ -43,6 +44,7 @@ class GenerateResourcePermissionsCommand extends Command
         }
         // Fallback: use class basename in snake_case
         $basename = class_basename($resource);
+
         return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $basename));
     }
-} 
+}

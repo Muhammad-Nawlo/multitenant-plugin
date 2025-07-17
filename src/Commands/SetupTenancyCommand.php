@@ -174,8 +174,9 @@ class SetupTenancyCommand extends Command
         $userModelVar = 'user';
 
         foreach ($policies as $policy) {
-            if (!File::exists($policy['stub'])) {
+            if (! File::exists($policy['stub'])) {
                 $this->warn('Policy stub not found: ' . $policy['stub']);
+
                 continue;
             }
             $stub = File::get($policy['stub']);

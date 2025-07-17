@@ -9,6 +9,7 @@ use Spatie\Permission\Models\Permission;
 class GeneratePanelPermissionsCommand extends Command
 {
     protected $signature = 'multitenant:generate-panel-permissions';
+
     protected $description = 'Generate all standard permissions for all resources registered to all panels';
 
     public function handle()
@@ -20,16 +21,18 @@ class GeneratePanelPermissionsCommand extends Command
 
         foreach (glob($panelPath . '/*.php') as $panelFile) {
             $panelClass = $panelNamespace . '\\' . pathinfo($panelFile, PATHINFO_FILENAME);
-            if (!class_exists($panelClass)) {
+            if (! class_exists($panelClass)) {
                 require_once $panelFile;
             }
-            if (!class_exists($panelClass)) {
+            if (! class_exists($panelClass)) {
                 $this->warn("Panel class not found: $panelClass");
+
                 continue;
             }
             $panel = new $panelClass;
-            if (!method_exists($panel, 'boot')) {
+            if (! method_exists($panel, 'boot')) {
                 $this->warn("Panel class $panelClass does not have a boot method.");
+
                 continue;
             }
             // Use reflection to get resources registered in boot()
@@ -52,6 +55,7 @@ class GeneratePanelPermissionsCommand extends Command
         foreach ($lines as $line) {
             if (Str::contains($line, '->resources([')) {
                 $inResources = true;
+
                 continue;
             }
             if ($inResources) {
@@ -63,6 +67,7 @@ class GeneratePanelPermissionsCommand extends Command
                 }
             }
         }
+
         return $resources;
     }
 
@@ -82,12 +87,13 @@ class GeneratePanelPermissionsCommand extends Command
         $resourceSlug = $this->getResourceSlug($resourceClass);
         foreach ($actions as $action) {
             $permissionName = $action . '_' . $resourceSlug;
-            if (!Permission::where('name', $permissionName)->exists()) {
+            if (! Permission::where('name', $permissionName)->exists()) {
                 Permission::create(['name' => $permissionName, 'guard_name' => 'web']);
                 $this->info("Created permission: {$permissionName}");
                 $created++;
             }
         }
+
         return $created;
     }
 
@@ -98,6 +104,7 @@ class GeneratePanelPermissionsCommand extends Command
         }
         // Fallback: use class basename in snake_case
         $basename = class_basename($resourceClass);
+
         return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $basename));
     }
-} 
+}
